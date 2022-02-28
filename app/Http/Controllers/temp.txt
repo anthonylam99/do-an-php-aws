@@ -1,0 +1,41 @@
+// $marshaler = new Marshaler();
+        // $dynamoDb = new DynamoDbController();
+
+        // $username = $request->get('username');
+        // $password = $request->get('password');
+
+        // $table = 'users';
+
+        // $params = [
+        //     'UserName' => $username,
+        //     'Password' => md5($password)
+        // ];
+
+        // $query = $dynamoDb->query($table, $params);
+
+        // if (empty($query->get('Count'))) {
+        //     return response()->json([
+        //         'status' => 500,
+        //         'message' => 'Thông tin đăng nhập không hợp lệ'
+        //     ], 500);
+        // } else {
+        //     $data = json_decode($marshaler->unmarshalJson($query->get('Items')[0]), true);
+        //     $arrIp = [];
+        //     $timestamp = date('Y-m-d H:i:s');
+        //     $clientIP = $this->getMyIp();
+        //     $location = $this->getMyLocation($clientIP['ip']);
+
+        //     array_push($arrIp, $clientIP['ip']);
+        //     $tokenArr = [
+        //         'UserARN' => $data['UserARN'],
+        //         'UserName' => $data['UserName'],
+        //         'UserId' => $data['UserId'],
+        //         'TimeStamp' => $timestamp,
+        //         'Expired' => date('Y-m-d H:i:s', strtotime($timestamp . ' + 1 seconds')),
+        //         'Status' => true,
+        //         'TrustedIp' => $arrIp,
+        //         'Location' => $location
+        //     ];
+        //     $token = Crypt::encrypt($tokenArr);
+        //     $request->session()->put('token', $token);
+        // }

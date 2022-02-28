@@ -1,0 +1,9 @@
+****RUNNING LOCAL DB IN PORT 8030****
+java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb -port 8030
+
+****LIST ALL TABLE IN DB****
+aws dynamodb list-tables --endpoint-url http://localhost:8030
+
+****SELECT ALL FROM A TABLE****
+aws dynamodb scan --table-name users --endpoint-url http://localhost:8030
+
