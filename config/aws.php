@@ -1,11 +1,11 @@
-<?php 
+<?php
 return [
     // 5Ji3+0dtl3WqmrhBK/zd59mePygMAKxC6nQLfslG
     // hhwB9h3Emg8TZIh1eC9H9mLMKa2ioc6+Ps4JfHPk
     's3' => [
         'region' => 'ap-southeast-3',
-        'key' => 'AKIAV6R3ZBLIRTAGYUOA', //Access key
-        'secret' => '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', //Secret key
+        'key' => 'AKIAV6R3ZBLIQ6CAFNH4', //Access key
+        'secret' => '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', //Secret key
         'bucket' => 'upload.file.test'
     ],
     'user' => [

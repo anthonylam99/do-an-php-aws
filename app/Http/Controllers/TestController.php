@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use FFI;
+use App\Entity\HZip;
+use Aws\Credentials\Credentials;
+use Aws\Exception\MultipartUploadException;
+use Aws\S3\MultipartUploader;
+use Aws\S3\ObjectUploader;
+use Aws\S3\S3Client;
 use Illuminate\Http\Request;
 
 class TestController extends Controller
@@ -135,5 +140,50 @@ class TestController extends Controller
         }
 
         return array_intersect($boisoA, $boisoB);
+    }
+
+
+    public function folderToZip(Request $request){
+        // file_put_contents(public_path() . '/zip/downloads.zip', '');
+        fopen(public_path() . '/zip/' . 'downloads.zip', 'w');
+        HZip::zipDir(public_path('downloads'), public_path() . '/zip/downloads.zip');
+
+        $credentials = new Credentials(config('aws.s3.key'), config('aws.s3.secret'));
+
+        $options = [
+            'version'     => 'latest',
+            'region'      => 'ap-southeast-3',
+            'credentials' => $credentials
+        ];
+        $s3 = new S3Client($options);
+
+
+        $bucket = config('aws.s3.bucket');
+        $key = 'zip/downloads.zip';
+        $source = fopen(public_path() . '/zip/downloads.zip', 'rb');
+
+        $uploader = new ObjectUploader(
+            $s3,
+            $bucket,
+            $key,
+            $source
+        );
+        do {
+            try {
+                $result = $uploader->upload();
+                if ($result["@metadata"]["statusCode"] == '200') {
+                    print('<p>File successfully uploaded to ' . $result["ObjectURL"] . '.</p>');
+                }
+                print($result);
+            } catch (MultipartUploadException $e) {
+                rewind($source);
+                $uploader = new MultipartUploader($s3, $source, [
+                    'state' => $e->getState(),
+                ]);
+            }
+        } while (!isset($result));
+        
+        fclose($source);
+         
     }
 }

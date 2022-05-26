@@ -23,8 +23,26 @@ use function Aws\recursive_dir_iterator;
 
 class S3Controller extends Controller
 {
-    public function createBucket($bucket = '')
+    public function listBucket(){
+        $credentials = new Credentials(config('aws.s3.key'), config('aws.s3.secret'));
+
+        $options = [
+            'version'     => 'latest',
+            'region'      => 'ap-southeast-3',
+            'credentials' => $credentials
+        ];
+        $s3 = new S3Client($options);
+
+        $buckets = $s3->listBuckets();
+        dd($buckets);
+        foreach ($buckets['Buckets'] as $bucket) {
+            echo $bucket['Name'] . "\n";
+        }
+    }
+
+    public function createBucket(Request $request)
     {
+        $bucket = $request->get('bucket', '');
         $credentials = new Credentials(config('aws.s3.key'), config('aws.s3.secret'));
 
         $options = [
@@ -79,10 +97,10 @@ class S3Controller extends Controller
 
         $cookie = Cookie::get('token');
         $username = $request->get('username');
-        $access = $user->getAccessRole($username);
-        dd($request);
-        $credentials = new Credentials(Crypt::decryptString($access[0]), Crypt::decryptString($access[1]));
-   
+//        $access = $user->getAccessRole($username);
+
+//        $credentials = new Credentials(Crypt::decryptString($access[0]), Crypt::decryptString($access[1]));
+        $credentials = new Credentials(config('aws.s3.key'), config('aws.s3.secret'));
         $options = [
             'version'     => 'latest',
             'region'      => 'ap-southeast-3',
@@ -90,6 +108,7 @@ class S3Controller extends Controller
         ];
         $s3 = new S3Client($options);
         $file = $request->file('file');
+
         $fileName = $file->getClientOriginalName();
         $tmpName = $file->getPathname();
         $filepath = public_path('uploads/');
@@ -101,7 +120,7 @@ class S3Controller extends Controller
         $tmp_file_name = "{$key}.{$extension}";
         $tmp_file_path = $filepath . $tmp_file_name;
 
-        
+
         $file->move($filepath, $tmp_file_name);
 
         $userFolder = strtolower($username);
@@ -185,8 +204,8 @@ class S3Controller extends Controller
 
     public function readingFile()
     {
-        // $credentials = new Credentials(config('aws.s3.key'), config('aws.s3.secret'));
-        $credentials = new Credentials(config('aws.user3.key'), config('aws.user3.secret'));
+         $credentials = new Credentials(config('aws.s3.key'), config('aws.s3.secret'));
+//        $credentials = new Credentials(config('aws.user3.key'), config('aws.user3.secret'));
 
         $options = [
             'version'     => 'latest',
@@ -204,7 +223,7 @@ class S3Controller extends Controller
             //Creating a presigned URL
             $cmd = $s3->getCommand('GetObject', [
                 'Bucket' => $bucket,
-                'Key' => 'uploads/FILE_20211026_195535_giay-1.docx',
+                'Key' => 'uploads/Long.docx',
             ]);
 
             $request = $s3->createPresignedRequest($cmd, '+20 minutes');
@@ -417,7 +436,7 @@ class S3Controller extends Controller
             if (!empty($params)) {
                 array_push($bucketPolicy->Statement, $params);
             }
-            
+
             try {
                 $result = $s3->putBucketPolicy([
                     'Bucket' => $bucket,

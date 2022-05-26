@@ -28,9 +28,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('create-bucket', [S3Controller::class, 'createBucket']);
+Route::put('create-bucket', [S3Controller::class, 'createBucket']);
 
-Route::get('upload', [S3Controller::class, 'uploadFile'])->middleware(CheckTokenExpired::class);
+Route::post('upload', [S3Controller::class, 'uploadFile']);
 
 Route::post('upload-secret', [S3Controller::class, 'uploadFileEncrypt']);
 
@@ -42,7 +42,7 @@ Route::get('get-user', [S3Controller::class, 'getUser']);
 
 Route::get('get-bucket-acl', [S3Controller::class, 'getBucketACL']);
 
-Route::post('create-user', [UserController::class, 'createUser']);
+Route::post('create-user', [IAMController::class, 'createUser']);
 
 Route::post('create-access-key', [S3Controller::class, 'createAccessKeyForAUser']);
 
@@ -67,6 +67,9 @@ Route::get('remove-grant-decryption-for-a-user', [S3Controller::class, 'removeGr
 Route::post('create-login-password', [IAMController::class, 'createLoginUserPassword']);
 
 Route::get('list-attached-user-policy', [S3Controller::class, 'listAttachedUserPolicy']);
+
+
+Route::get('list-bucket', [S3Controller::class, 'listBucket']);
 
 
 /*****************DYNAMO DB CLIENT******************* */
@@ -104,4 +107,4 @@ Route::get('list-users', [IAMController::class, 'listUsers']);
 
 Route::get('check-login', [UserController::class, 'checkLogin'])->middleware(CheckTokenExpired::class);
 
-Route::get('test', [TestController::class, 'test']);
+Route::get('test', [TestController::class, 'folderToZip']);

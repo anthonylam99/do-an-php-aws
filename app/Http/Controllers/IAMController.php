@@ -32,7 +32,7 @@ class IAMController extends Controller
             }
         }
     }
-    
+
     public function createLoginUserPassword(Request $request)
     {
 
@@ -92,7 +92,7 @@ class IAMController extends Controller
 
         try {
             $result = $client->listUsers();
-            dd($result);
+            return response()->json(['message' => 'ok']);
         } catch (AwsException $e) {
             // output error message if fails
             dd($e->getMessage());

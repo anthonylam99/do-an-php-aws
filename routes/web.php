@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+//Route::get('/downloads/{file}', function ($file) {
+//    return response()->file(public_path().'/storage/downloads/'.$file);
+//});
